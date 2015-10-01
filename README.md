@@ -24,17 +24,23 @@ can redistribute the library and/or modify it under the terms of GPL license.
 Dependency: 
 
 cmake > 2.8
+
 boost > 1.55
 
 cd FudanDNN
+
 mkdir build
+
 cd build
 
 --use makefile
+
 cmake ../
+
 make
 
 --use other available IDE, such as Xcode
+
 cmake -G Xcode ../
 
 use cmake -h to get information about your IDE
