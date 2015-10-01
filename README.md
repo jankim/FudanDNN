@@ -4,12 +4,9 @@ FudanDNN: a detachable neural network framework with easy-to-use GUI
 1. Copyright
 ------------
 
-Jiangtao Feng
-
-Shangtong Zhang
-
-Siyan Li
-
+Jiangtao Feng<br />
+Shangtong Zhang<br />
+Siyan Li<br />
 Xiaoqing Zheng
 
 2. License
@@ -23,24 +20,20 @@ can redistribute the library and/or modify it under the terms of GPL license.
 
 Dependency: 
 
-cmake > 2.8
-
+cmake > 2.8<br />
 boost > 1.55
 
-cd FudanDNN
+Build:
 
-mkdir build
-
+cd FudanDNN<br />
+mkdir build<br />
 cd build
 
---use makefile
-
-cmake ../
-
+--use makefile<br />
+cmake ../<br />
 make
 
---use other available IDE, such as Xcode
-
+--use other available IDE, such as Xcode<br />
 cmake -G Xcode ../
 
 use cmake -h to get information about your IDE
