@@ -1,6 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
-
-project(FDUDNN_MASTER)
+project(FudanDNN)
 
 set (SRC_LIST 
 	AbstractComponent.cpp
