@@ -1,6 +1,5 @@
 #include "MasterControl.h"
-
-using namespace std;
+#include "boost/lexical_cast.hpp"
 
 size_t MasterControl::addRBM(size_t visualUnit, size_t hiddenUnit, size_t initScheme,
 	size_t type, bool sparse, size_t batchSize, size_t preTrainingTimes, size_t nonLinearType){
@@ -506,7 +505,7 @@ void MasterControl::writeSelf(string filename)
 			fout << nodes.at(i)->getNextNode().at(j)->getId() << '\n';
 		}
 		fout << '\n';
-		nodes.at(i)->getLayer()->writeSelf("" + i);
+		nodes.at(i)->getLayer()->writeSelf(boost::lexical_cast<string>(i));
 	}
 
 	fout << criteria->getType();
@@ -534,79 +533,79 @@ void MasterControl::readSelf(string filename)
 		if (strcmp(name, "AutoEncoder") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new AutoEncoder());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "RBM") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new RBM());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "Linear") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new LinearLayer());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "ContractiveAutoEncoder") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new ContractiveAutoEncoder());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "DenoiseAutoEncoder") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new DenoiseAutoEncoder());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "HardShrink") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new HardShrink());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "HardTanH") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new HardTanH());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "LogSigmoid") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new LogSigmoid());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "PReLU") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new PReLU());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "ReLU") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new ReLU());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "Sigmoid") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new Sigmoid());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "SoftShrink") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new SoftShrink());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 		else if (strcmp(name, "SparseAutoEncoder") == 0)
 		{
 			shared_ptr<AbstractLayer> network (new SparseAutoEncoder());
-			network->readSelf("" + i);
+			network->readSelf(boost::lexical_cast<string>(i));
 			nodes.push_back(shared_ptr<NetworkNode>(new NetworkNode(i, network)));
 		}
 
@@ -623,69 +622,4 @@ void MasterControl::readSelf(string filename)
 
 	fin.close();
 
-}
-
-
-/*int main(){
-	MasterControl *master = new MasterControl();
-	size_t id1 = master->addLINEAR(1,5,0);
-	size_t id2 = master->addNONLINEAR(5, NonLinearFactory::SIGMOID);
-	size_t id3 = master->addLINEAR(5, 1,0);
-	size_t id4 = master->addNONLINEAR(1, NonLinearFactory::SIGMOID);
-	master->addEdge(id1, id2);
-	master->addEdge(id2, id3);
-	master->addEdge(id3, id4);
-	master->setBatchSize(1);
-	size_t inputId = master->addInput("dataset/regression.xml");
-	master->addInputEdge(inputId, id1);
-	master->setCriteria(0, 1);
-	master->setTrainingTimes(42000);
-	master->run();
-	while (1);
-};*/
-
-
-int main(){
-	MasterControl *master = new MasterControl();
-	size_t cnnId = master->addCNN();
-	//size_t kernelSize, size_t stride,size_t featureMapNum, size_t num, size_t visualRow, size_t visualColumn, size_t scheme
-	size_t id1 = master->addCNN2DComponentToCNN(1, 1, 6, 1, 28, 28, 0, cnnId);
-	size_t nonLinear1 = master->addNonLinearToCNN(28,28,6,0, cnnId);
-	size_t pooling1 = master->addMaxPoolingComponentToCNN(2, 2, 28, 28, cnnId);
-
-	size_t id2 = master->addCNN2DComponentToCNN(5, 1, 16, 6, 14, 14, 0, cnnId);
-	size_t nonLinear2 = master->addNonLinearToCNN(10,10,16,0, cnnId);
-	size_t pooling2 = master->addMaxPoolingComponentToCNN(2, 2, 10, 10, cnnId);
-
-	size_t id3 = master->addCNN2DComponentToCNN(5, 1, 120, 16, 5, 5, 0, cnnId);
-	size_t nonLinear3 = master->addNonLinearToCNN(1,1,120,0, cnnId);
-
-	size_t cnnEdge1 = master->addEdgeInCNN(id1, nonLinear1, cnnId);
-	size_t cnnEdge2 = master->addEdgeInCNN(nonLinear1,pooling1,cnnId);
-	size_t cnnEdge3 = master->addEdgeInCNN(pooling1, id2, cnnId);
-
-	size_t cnnEdge4 = master->addEdgeInCNN(id2, nonLinear2, cnnId);
-	size_t cnnEdge5 = master->addEdgeInCNN(nonLinear2,pooling2,cnnId);
-	size_t cnnEdge6 = master->addEdgeInCNN(pooling2, id3, cnnId);
-
-	size_t cnnEdge7 = master->addEdgeInCNN(id3, nonLinear3, cnnId);
-
-	size_t inputId = master->addInput("dataset/temp.xml");
-	master->addInputEdge(inputId, cnnId);
-
-	size_t layer1 = master->addLINEAR(120, 84, 0);
-	size_t non1 = master->addNONLINEAR(84, 0);
-	size_t layer2 = master->addLINEAR(84, 10, 0);
-	size_t non2 = master->addNONLINEAR(10, 0);
-
-	master->addEdge(cnnId, layer1);
-	master->addEdge(layer1, non1);
-	master->addEdge(non1, layer2);
-	master->addEdge(layer2, non2);
-
-	master->setCriteria(0, 10);
-	master->setTrainingTimes(10000);
-	master->setBatchSize(1);
-	master->run();
-	while (1);
 }

@@ -110,7 +110,7 @@ void RBM::preTraining(string filename)
 			shared_ptr<AbstractMatrix> datum = readDatum(fin);
 			double err = singleTraining(datum);
 			if (index % 1000 == 0)
-				printf("count: %d %.4f\n", index, err);
+				printf("count: %zu %.4f\n", index, err);
 			//this->weight->print();
 			//system("pause");
 

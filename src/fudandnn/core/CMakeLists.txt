@@ -43,5 +43,10 @@ set (SRC_LIST
 	tinyxmlerror.cpp
 	tinyxmlparser.cpp)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-add_executable(fdudnn_master ${SRC_LIST})
+ADD_LIBRARY(fudandnn SHARED ${SRC_LIST})
+
+ADD_LIBRARY(fudandnn_static STATIC ${SRC_LIST})
+
+SET_TARGET_PROPERTIES(fudandnn_static PROPERTIES OUTPUT_NAME "fudandnn")
+SET_TARGET_PROPERTIES(fudandnn PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+SET_TARGET_PROPERTIES(fudandnn_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
