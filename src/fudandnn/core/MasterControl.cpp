@@ -145,10 +145,10 @@ size_t MasterControl::addCNN2DComponentToCNN(size_t kernelSize, size_t stride, s
 }
 
 size_t MasterControl::addMaxPoolingComponentToCNN(size_t poolingSize, size_t stride,
-	size_t visualRow, size_t visualColumn, size_t cnnId){
+	size_t visualRow, size_t visualColumn, size_t num, size_t cnnId){
 	shared_ptr<NetworkNode> node = idMap.find(cnnId)->second;
 	shared_ptr<ConvolutionalNetworkLayer> cnn = dynamic_pointer_cast<ConvolutionalNetworkLayer>(node->getLayer());
-	return cnn->addMaxPoolingToCNN(poolingSize, stride, visualRow, visualColumn);
+	return cnn->addMaxPoolingToCNN(poolingSize, stride, visualRow, visualColumn,num);
 }
 
 size_t MasterControl::addNonLinearToCNN(int visualRow, int visualColumn, size_t num, size_t type, size_t cnnId){

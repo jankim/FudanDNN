@@ -17,8 +17,9 @@ protected:
 	// # of feature maps
 	size_t featureMapNum;
 	double regularizationRate = 0;
-	double kernelLearningRate = 0.1;
+	double kernelLearningRate = 0.05;
 	double biasLearningRate = 0.1;
+	double momentumRate = 0.9;
 
 	// conv kernel 
 	vector<shared_ptr<AbstractMatrix>> convKernels;
@@ -26,11 +27,17 @@ protected:
 	// gradient of kernel 
 	vector<shared_ptr<AbstractMatrix>> convKernelsGradient;
 
+	// momentum of kernel
+	vector<shared_ptr<AbstractMatrix>> convKernelMomentum;
+
 	// bias
 	vector<shared_ptr<AbstractMatrix>> bias;
 
 	// gradient of bias
 	vector<shared_ptr<AbstractMatrix>> biasGradient;
+
+	// momentum of bias
+	vector<shared_ptr<AbstractMatrix>> biasMomentum;
 
 	void initialization(size_t initScheme);
 

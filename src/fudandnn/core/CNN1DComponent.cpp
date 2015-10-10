@@ -51,6 +51,10 @@ void CNN1DComponent::initialization(size_t scheme)
 		m->initializeValue(0, 0);
 		convKernelsGradient.push_back(m);
 
+		m = shared_ptr<AbstractMatrix>(new Matrix(kernelSize, 1));
+		m->initializeValue(0, 0);
+		convKernelMomentum.push_back(m);
+
 		m = shared_ptr<AbstractMatrix>(new Matrix(1, 1));
 		m->initializeValue(lowerBound, upperBound);
 		bias.push_back(m);
@@ -58,6 +62,10 @@ void CNN1DComponent::initialization(size_t scheme)
 		m = shared_ptr<AbstractMatrix>(new Matrix(1, 1));
 		m->initializeValue(0, 0);
 		biasGradient.push_back(m);
+
+		m = shared_ptr<AbstractMatrix>(new Matrix(1, 1));
+		m->initializeValue(0, 0);
+		biasMomentum.push_back(m);
 
 	}
 
@@ -80,17 +88,17 @@ void CNN1DComponent::compute() {
 	hiddenValue.clear();
 	for (size_t f = 0; f < featureMapNum; f++)
 	{
+		shared_ptr<AbstractMatrix> fm(new Matrix(kernelSize, kernelSize));
 		for (size_t v = 0; v < num; v++)
 		{
-			shared_ptr<AbstractMatrix> fm(new Matrix(kernelSize, kernelSize));
 			for (size_t i = 0; i < visualRow; i += stride)
 			{
-				fm->add(i / stride, 0,
-					visualValue[v]->convolve(i, i + kernelSize - 1, 0, 0, convKernels[f]));
+				fm->add_inplace(i / stride, 0,
+					visualValue[v]->convolve(i, i + kernelSize - 1, 0, 1, convKernels[f]));
 			}
-			fm->add(bias[f]);
-			hiddenValue.push_back(fm);
 		}
+		fm->add_inplace(bias[f]->getValue(0, 0));
+		hiddenValue.push_back(fm);
 	}
 }
 
@@ -98,17 +106,22 @@ void CNN1DComponent::gradient(){
 
 	for (size_t v = 0; v < num; v++)
 	{
+		visualGradient[v]->initializeValue(0, 0);
 		for (size_t f = 0; f < featureMapNum; f++)
 		{
 			for (size_t i = 0; i < visualRow; i += stride)
 			{
 				double gradient = hiddenGradient[f]->getValue(i / stride, num);
-				visualGradient[v]->add(i, i + kernelSize - 1, 0, 0,
+				visualGradient[v]->add_inplace(i, i + kernelSize - 1, 0, 0,
 					convKernels[f]->multiple(gradient));
-				convKernelsGradient[f]->add(visualValue[v]->submatrix(i, i + kernelSize - 1, 0, 0)->multiple(gradient));
+				convKernelsGradient[f]->add_inplace(visualValue[v]->submatrix(i, i + kernelSize - 1, 0, 0)->multiple(gradient));
 			}
-			biasGradient[f]->add(hiddenGradient[f]);
 		}
+	}
+
+	for (size_t f = 0; f < featureMapNum; f++)
+	{
+		biasGradient[f]->add_inplace(hiddenGradient[f]->sum());
 	}
 
 }
@@ -117,8 +130,12 @@ void CNN1DComponent::update()
 {
 	for (int i = 0; i < featureMapNum; i++)
 	{
-		convKernels[i] = convKernels[i]->add(convKernelsGradient[i]->multiple(kernelLearningRate));
-		bias[i] = bias[i]->add(biasGradient[i]->multiple(biasLearningRate));
+		convKernelMomentum[i]->multiple_inplace(momentumRate)->add_inplace(convKernelsGradient[i]->multiple_inplace(1 - momentumRate));
+		convKernels[i]->add_inplace(convKernelMomentum[i]->multiple(kernelLearningRate));
+		convKernelsGradient[i]->initializeValue(0, 0);
+		biasMomentum[i]->multiple_inplace(momentumRate)->add_inplace(biasGradient[i]->multiple_inplace(1 - momentumRate));
+		bias[i]->add_inplace(biasMomentum[i]->multiple(biasLearningRate));
+		biasGradient[i]->initializeValue(0, 0);
 	}
 }
 
