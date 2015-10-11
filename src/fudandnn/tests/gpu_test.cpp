@@ -1,5 +1,6 @@
 #include "boost/test/unit_test.hpp"
 
+#ifdef FUDANDNN_GPU
 #include "viennacl/vector.hpp"
 #include "viennacl/scalar.hpp"
 #include "viennacl/linalg/inner_prod.hpp"
@@ -7,6 +8,7 @@
 #include "viennacl/linalg/norm_2.hpp"
 #include "viennacl/linalg/norm_inf.hpp"
 #include "viennacl/tools/random.hpp"
+#endif
 
 #include <iostream>
 #include <vector>
