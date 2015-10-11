@@ -21,7 +21,9 @@ can redistribute the library and/or modify it under the terms of GPL license.
 Dependency: 
 
 cmake > 2.8<br />
-boost > 1.55
+boost > 1.55<br />
+OpenCL 1.2(optional)<br />
+ViennalCL 1.7(optional)<br />
 
 Build:
 
@@ -38,5 +40,6 @@ cmake -G Xcode ../
 
 use cmake -h to get information about your IDE
 
+cmake -DGPU=OpenCL (use OpenCL backends, default is CPU backends)
 
 

@@ -2,11 +2,12 @@ project(FudanDNN)
 
 set (SRC_LIST
 	fudandnn_test.cpp
-	cnn_test.cpp)
+	cnn_test.cpp
+	gpu_test.cpp)
 
 add_executable(fudandnn_test ${SRC_LIST})
 
-target_link_libraries(fudandnn_test ${Boost_LIBRARIES} fudandnn)
+target_link_libraries(fudandnn_test ${Boost_LIBRARIES} fudandnn ${OpenCL_LIBRARIES})
 
 add_custom_command(TARGET fudandnn_test
   POST_BUILD
